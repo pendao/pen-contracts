@@ -1000,7 +1000,7 @@ contract sPenDao is ERC20, Ownable {
     address public initializer;
 
     event LogSupply(uint256 indexed epoch, uint256 timestamp, uint256 totalSupply );
-    event LogRebase( uint256 indexed epoch, uint256 rebase, uint256 index );
+    event LogRebase( uint256 indexed epoch, uint256 rebase, uint256 profit, uint256 index );
     event LogStakingContractUpdated( address stakingContract );
 
     struct Rebase {
@@ -1067,7 +1067,7 @@ contract sPenDao is ERC20, Ownable {
 
         if ( profit_ == 0 ) {
             emit LogSupply( epoch_, block.timestamp, _totalSupply );
-            emit LogRebase( epoch_, 0, index() );
+            emit LogRebase( epoch_, 0, index(), 0 );
             return _totalSupply;
         } else if ( circulatingSupply_ > 0 ){
             rebaseAmount = profit_.mul( _totalSupply ).div( circulatingSupply_ );
@@ -1109,7 +1109,7 @@ contract sPenDao is ERC20, Ownable {
         }));
         
         emit LogSupply( epoch_, block.timestamp, _totalSupply );
-        emit LogRebase( epoch_, rebasePercent, index() );
+        emit LogRebase( epoch_, rebasePercent, index(), profit_ );
 
         return true;
     }

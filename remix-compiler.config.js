@@ -2,7 +2,7 @@ module.exports = {
             solidity: '0.7.5',
             settings: {
               optimizer: {
-                enabled: true,
+                enabled: false,
                 runs: 200
               }
             }
