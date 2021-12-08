@@ -275,10 +275,16 @@ contract PenDaoBondingCalculator is IBondingCalculator {
     function getKValue( address _pair ) public view returns( uint k_ ) {
         uint token0 = IERC20( IUniswapV2Pair( _pair ).token0() ).decimals();
         uint token1 = IERC20( IUniswapV2Pair( _pair ).token1() ).decimals();
-        uint decimals = token0.add( token1 ).sub( IERC20( _pair ).decimals() );
+        uint tokenDecimals = token0.add( token1 );
+        uint lpDecimals =IERC20( _pair ).decimals();
 
         (uint reserve0, uint reserve1, ) = IUniswapV2Pair( _pair ).getReserves();
-        k_ = reserve0.mul(reserve1).div( 10 ** decimals );
+
+        if (tokenDecimals > lpDecimals) {
+            k_ = reserve0.mul(reserve1).div( 10 ** tokenDecimals.sub(lpDecimals) );
+        } else {
+            k_ = reserve0.mul(reserve1).mul(10 ** lpDecimals.sub(tokenDecimals));
+        }
     }
 
     function getTotalValue( address _pair ) public view returns ( uint _value ) {
